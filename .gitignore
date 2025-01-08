@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+
+# Docker
+*.log
+*.out
+docker-compose.override.yml
+.env.docker
+.DS_Store
+Dockerfile.*
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+terraform.tfvars.json
+
+# Ignore any auto-generated plan files
+*.plan
+
+# Logs and local files
+*.log
+*.bak
+*.swp
+*.tmp
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.iml
+
+# Secrets and sensitive files
+secrets.json
+*.key
+*.crt
+
+# System Files
+Thumbs.db
+.DS_Store
+
