@@ -20,6 +20,9 @@ Dockerfile.*
 terraform.tfvars
 terraform.tfvars.json
 
+# Ignore tfvars files
+*.tfvars
+
 # Ignore any auto-generated plan files
 *.plan
 
