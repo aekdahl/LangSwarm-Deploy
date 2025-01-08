@@ -1,9 +1,16 @@
+name: Terraform Infrastructure and Deployment
+
+on:
+  push:
+    tags:
+      - "v*"
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout Repository
       uses: actions/checkout@v3
 
     - name: Set up Terraform
@@ -20,10 +27,18 @@ jobs:
       working-directory: terraform
       run: terraform init
 
-    - name: Terraform Plan
+    - name: Apply Terraform Plan
       working-directory: terraform
-      run: terraform plan -var-file="../settings.tfvars"
+      run: terraform apply -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}" -var="region=europe-west1"
 
-    - name: Terraform Apply
-      working-directory: terraform
-      run: terraform apply -auto-approve -var-file="../settings.tfvars"
+    - name: Build and Push Backend Docker Image
+      run: |
+        cd backend
+        docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:latest .
+        docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:latest
+
+    - name: Build and Push Frontend Docker Image
+      run: |
+        cd frontend
+        docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:latest .
+        docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:latest
