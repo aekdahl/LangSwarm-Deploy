@@ -17,5 +17,5 @@ ENV APP_PORT=8080
 # Expose the application port
 EXPOSE 8080
 
-# Start the backend application
-CMD ["python", "-m", "langswarm-backend.main"]
+# Run the backend directly by referencing the spin_up_service method
+CMD ["python", "-c", "from langswarm.backend.main import spin_up_service; spin_up_service(app)"]
