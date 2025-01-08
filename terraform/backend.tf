@@ -5,6 +5,14 @@ resource "google_artifact_registry_repository" "langswarm_repo" {
   description  = "Artifact Registry for LangSwarm backend"
 }
 
+terraform {
+  backend "gcs" {
+    bucket  = var.backend_enabled ? "your-terraform-state-bucket" : null
+    prefix  = "terraform/state"
+    project = var.project_id
+  }
+}
+
 resource "google_cloud_run_service" "langswarm_backend" {
   name     = "langswarm-backend"
   location = var.region
