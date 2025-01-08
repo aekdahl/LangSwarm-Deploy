@@ -1,24 +1,18 @@
-# Step 1: Use Node.js image to build the frontend
-FROM node:18 AS build
-
-# Set working directory
-WORKDIR /app
-
-# Clone the frontend code from a GitHub release or branch
-# Replace `TAG` with a version or branch name
-ARG REPO_URL=https://github.com/your-org/frontend-repo
-ARG TAG=main
-RUN git clone --branch ${TAG} ${REPO_URL} /app
-
-# Install dependencies and build the frontend
-RUN npm install
-RUN npm run build
-
-# Step 2: Use Nginx to serve the built static files
+# Use a lightweight base image for serving static files
 FROM nginx:stable
 
-# Copy the build artifacts
-COPY --from=build /app/build /usr/share/nginx/html
+# Set an argument for the release URL
+ARG RELEASE_URL=https://github.com/your-org/frontend-repo/releases/download/v1.0.0/frontend-build.zip
+
+# Set the working directory
+WORKDIR /usr/share/nginx/html
+
+# Download and extract the pre-built frontend artifacts
+RUN apt-get update && apt-get install -y curl unzip && \
+    curl -L -o build.zip ${RELEASE_URL} && \
+    unzip build.zip && \
+    rm build.zip && \
+    apt-get remove -y curl unzip && apt-get clean
 
 # Expose the default Nginx port
 EXPOSE 80
