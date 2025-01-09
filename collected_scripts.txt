@@ -1,4 +1,4 @@
-# Total Document Length: 3106 characters
+# Total Document Length: 5483 characters
 
 
 --------------------------------------------------------------------------------
@@ -180,5 +180,102 @@ variable "service_account_email" {
   description = "Service account email for deployments"
   type        = string
 }
+
+
+
+--------------------------------------------------------------------------------
+File: workflows/terraform.yml
+--------------------------------------------------------------------------------
+
+name: Terraform Infrastructure and Deployment
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.5
+
+    - name: Authenticate with GCP
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+    - name: Initialize Terraform
+      working-directory: terraform
+      run: terraform init
+
+    - name: Apply Terraform Plan
+      working-directory: terraform
+      run: terraform apply -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}" -var="region=europe-west1"
+
+    - name: Build and Push Backend Docker Image
+      run: |
+        cd backend
+        docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:latest .
+        docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:latest
+
+    - name: Build and Push Frontend Docker Image
+      run: |
+        cd frontend
+        docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:latest .
+        docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:latest
+
+
+
+--------------------------------------------------------------------------------
+File: workflows/collect-scripts.yml
+--------------------------------------------------------------------------------
+
+name: Collect Scripts
+
+# Trigger the workflow manually
+on:
+  workflow_dispatch:
+
+jobs:
+  collect-scripts:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+
+      # Step 3: Install dependencies (if needed)
+      #- name: Install dependencies
+      #  run: |
+      #    pip install -r requirements.txt || true
+
+      # Step 4: Run the Python script
+      - name: Run collect_scripts.py
+        run: |
+          python collect_scripts.py
+
+      # Save file in main
+      - name: Commit collected_scripts.txt
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add collected_scripts.txt
+          git commit -m "Add collected_scripts.txt"
+          git push
 
 
