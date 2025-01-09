@@ -1,11 +1,11 @@
 module "langswarm_backend" {
-  source  = "./"
+  source  = "./."
   project_id = var.project_id
   region     = var.region
 }
 
 module "langswarm_frontend" {
-  source  = "./"
+  source  = "./."
   project_id = var.project_id
   region     = var.region
 }
