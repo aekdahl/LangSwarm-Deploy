@@ -10,7 +10,7 @@ WORKDIR /usr/share/nginx/html
 # Download and extract the pre-built frontend artifacts
 RUN apt-get update && apt-get install -y curl unzip && \
     curl -L -o build.zip ${RELEASE_URL} && \
-    unzip build.zip && \
+    unzip -o build.zip && \
     rm build.zip && \
     apt-get remove -y curl unzip && apt-get clean
 
