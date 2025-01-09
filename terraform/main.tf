@@ -1,3 +1,16 @@
+resource "google_project_service" "required_apis" {
+  for_each = toset([
+    "artifactregistry.googleapis.com",
+    "run.googleapis.com",
+    "storage.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "logging.googleapis.com",
+    "compute.googleapis.com",
+  ])
+  service = each.value
+}
+
 resource "google_artifact_registry_repository" "langswarm_repo" {
   repository_id         = "langswarm"
   format       = "DOCKER"
