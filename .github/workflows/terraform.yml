@@ -34,11 +34,11 @@ jobs:
         terraform state list | grep "google_project_service.required_apis\[\"iamcredentials.googleapis.com\"\]" && \
         terraform untaint google_project_service.required_apis["iamcredentials.googleapis.com"] || echo "Resource not tainted"
 
-    - name: Import Existing Artifact Registry (if needed)
-      working-directory: terraform/infrastructure
-      run: |
-        terraform import google_artifact_registry_repository.langswarm_repo \
-          projects/${{ secrets.GCP_PROJECT_ID }}/locations/europe-west1/repositories/langswarm || echo "Already imported or not needed"
+    #- name: Import Existing Artifact Registry (if needed)
+    #  working-directory: terraform/infrastructure
+    #  run: |
+    #    terraform import google_artifact_registry_repository.langswarm_repo \
+    #      projects/${{ secrets.GCP_PROJECT_ID }}/locations/europe-west1/repositories/langswarm || echo "Already imported or not needed"
 
     - name: Apply Terraform Plan
       working-directory: terraform/infrastructure
