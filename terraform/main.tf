@@ -9,6 +9,7 @@ resource "google_project_service" "required_apis" {
     "compute.googleapis.com",
   ])
   service = each.value
+  disable_on_destroy = false # Prevents Terraform from disabling APIs during resource destruction
 }
 
 resource "google_artifact_registry_repository" "langswarm_repo" {
