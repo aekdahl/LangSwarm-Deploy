@@ -29,7 +29,8 @@ jobs:
 
     - name: Apply Terraform to Create Artifact Registry
       working-directory: terraform
-      run: terraform apply -target=google_artifact_registry_repository.langswarm_repo -auto-approve \
+      run: terraform apply -target=google_artifact_registry_repository.langswarm_repo \
+           -auto-approve \
            -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
            -var="region=europe-west1"
 
