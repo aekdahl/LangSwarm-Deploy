@@ -15,6 +15,4 @@ EXPOSE 8080
 
 # Run the backend application
 #CMD ["python", "-c", "from langswarm.backend.main import spin_up; spin_up()"]
-#CMD ["python", "-c", "from langswarm.backend.main import spin_up"]
-#CMD ["python", "-c", "import os; os.environ['PORT'] = os.environ.get('PORT', '8080'); from langswarm.backend.main import spin_up; spin_up()"]
-CMD ["python", "-c", "import os; os.environ['PORT'] = os.environ.get('PORT', '8080'); from langswarm.backend.main import spin_up"]
+CMD ["python", "-c", "import os; os.environ['PORT'] = os.environ.get('PORT', '8080'); from langswarm.backend.main import spin_up; spin_up()"]
