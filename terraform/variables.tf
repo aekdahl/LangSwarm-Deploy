@@ -14,7 +14,3 @@ variable "backend_enabled" {
   default     = false
 }
 
-variable "service_account_email" {
-  description = "Service account email for deployments"
-  type        = string
-}
