@@ -11,6 +11,11 @@ terraform {
     prefix  = "terraform/state"
     project = var.project_id
   }
+  # Local backend fallback for testing
+  backend "local" {
+    enabled = !var.backend_enabled
+    path    = "terraform.tfstate"
+  }
 }
 
 resource "google_cloud_run_service" "langswarm_backend" {
