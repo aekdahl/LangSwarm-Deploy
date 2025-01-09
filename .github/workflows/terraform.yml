@@ -23,6 +23,10 @@ jobs:
       with:
         credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
+    - name: Authenticate Docker with Artifact Registry
+      run: |
+        gcloud auth configure-docker europe-west1-docker.pkg.dev
+
     - name: Build and Push Backend Docker Image
       run: |
         docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:latest .
