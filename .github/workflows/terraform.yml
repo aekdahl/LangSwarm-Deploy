@@ -23,6 +23,16 @@ jobs:
       with:
         credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
+    - name: Initialize Terraform
+      working-directory: terraform
+      run: terraform init
+
+    - name: Apply Terraform to Create Artifact Registry
+      working-directory: terraform
+      run: terraform apply -target=google_artifact_registry_repository.langswarm_repo -auto-approve \
+           -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
+           -var="region=europe-west1"
+
     - name: Authenticate Docker with Artifact Registry
       run: |
         gcloud auth configure-docker europe-west1-docker.pkg.dev
@@ -37,10 +47,6 @@ jobs:
         cd frontend
         docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:latest .
         docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:latest
-
-    - name: Initialize Terraform
-      working-directory: terraform
-      run: terraform init
 
     # Untaint the Resource (if needed)
     - name: Untaint iamcredentials.googleapis.com
