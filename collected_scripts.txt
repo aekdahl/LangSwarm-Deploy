@@ -1,2 +1,184 @@
 # Total Document Length: 3106 characters
 
+
+--------------------------------------------------------------------------------
+File: Dockerfile
+--------------------------------------------------------------------------------
+
+# Use a lightweight base image for serving static files
+FROM nginx:stable
+
+# Set an argument for the release URL
+ARG RELEASE_URL=https://github.com/your-org/frontend-repo/releases/download/v0.0.11/frontend-build.zip
+
+# Set the working directory
+WORKDIR /usr/share/nginx/html
+
+# Download and extract the pre-built frontend artifacts
+RUN apt-get update && apt-get install -y curl unzip && \
+    curl -L -o build.zip ${RELEASE_URL} && \
+    unzip build.zip && \
+    rm build.zip && \
+    apt-get remove -y curl unzip && apt-get clean
+
+# Expose the default Nginx port
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
+
+
+
+--------------------------------------------------------------------------------
+File: providers.tf
+--------------------------------------------------------------------------------
+
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
+provider "google-beta" {
+  project = var.project_id
+  region  = var.region
+}
+
+
+
+--------------------------------------------------------------------------------
+File: main.tf
+--------------------------------------------------------------------------------
+
+module "langswarm_backend" {
+  source  = "./backend"
+  project_id = var.project_id
+  region     = var.region
+}
+
+module "langswarm_frontend" {
+  source  = "./frontend"
+  project_id = var.project_id
+  region     = var.region
+}
+
+
+
+--------------------------------------------------------------------------------
+File: frontend.tf
+--------------------------------------------------------------------------------
+
+resource "google_cloud_run_service" "langswarm_frontend" {
+  name     = "langswarm-frontend"
+  location = var.region
+
+  template {
+    spec {
+      containers {
+        image = "europe-west1-docker.pkg.dev/${var.project_id}/langswarm/langswarm-frontend:latest"
+        ports {
+          container_port = 80
+        }
+        env {
+          name  = "REACT_APP_BACKEND_URL"
+          value = google_cloud_run_service.langswarm_backend.status[0].url
+        }
+      }
+    }
+  }
+
+  autogenerate_revision_name = true
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+}
+
+
+
+--------------------------------------------------------------------------------
+File: outputs.tf
+--------------------------------------------------------------------------------
+
+output "backend_url" {
+  value = google_cloud_run_service.langswarm_backend.status[0].url
+}
+
+output "frontend_url" {
+  value = google_cloud_run_service.langswarm_frontend.status[0].url
+}
+
+
+
+--------------------------------------------------------------------------------
+File: backend.tf
+--------------------------------------------------------------------------------
+
+resource "google_artifact_registry_repository" "langswarm_repo" {
+  name         = "langswarm"
+  format       = "DOCKER"
+  location     = var.region
+  description  = "Artifact Registry for LangSwarm backend"
+}
+
+terraform {
+  backend "gcs" {
+    bucket  = var.backend_enabled ? "your-terraform-state-bucket" : null
+    prefix  = "terraform/state"
+    project = var.project_id
+  }
+}
+
+resource "google_cloud_run_service" "langswarm_backend" {
+  name     = "langswarm-backend"
+  location = var.region
+
+  template {
+    spec {
+      containers {
+        image = "europe-west1-docker.pkg.dev/${var.project_id}/langswarm/langswarm-service:latest"
+        ports {
+          container_port = 8080
+        }
+        env {
+          name  = "APP_PORT"
+          value = "8080"
+        }
+      }
+    }
+  }
+
+  autogenerate_revision_name = true
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+}
+
+
+
+--------------------------------------------------------------------------------
+File: variables.tf
+--------------------------------------------------------------------------------
+
+variable "project_id" {
+  description = "GCP project ID"
+  type        = string
+}
+
+variable "region" {
+  description = "GCP region"
+  type        = string
+}
+
+variable "backend_enabled" {
+  description = "Enable remote backend (true for production, false for local state)"
+  type        = bool
+  default     = false
+}
+
+variable "service_account_email" {
+  description = "Service account email for deployments"
+  type        = string
+}
+
+
