@@ -1,5 +1,5 @@
 resource "google_artifact_registry_repository" "langswarm_repo" {
-  name         = "langswarm"
+  repository_id         = "langswarm"
   format       = "DOCKER"
   location     = var.region
   description  = "Artifact Registry for LangSwarm backend"
