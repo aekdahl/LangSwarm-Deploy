@@ -7,14 +7,14 @@ def collect_scripts(start_folder="START_FOLDER", output_file="collected_scripts.
     total_length = 0  # Variable to track the total length of the document
     
     folder_list = start_folder if isinstance(start_folder, list) else [start_folder]
-    for _folder in folder_list:
-        start_path = os.path.join(repo_root, _folder)
+    with open(output_file, "w", encoding="utf-8") as outfile:
+        for _folder in folder_list:
+            start_path = os.path.join(repo_root, _folder)
+        
+            if not os.path.exists(start_path):
+                print(f"Error: The folder '{_folder}' does not exist.")
+                return
     
-        if not os.path.exists(start_path):
-            print(f"Error: The folder '{_folder}' does not exist.")
-            return
-    
-        with open(output_file, "w", encoding="utf-8") as outfile:
             # Include files from the root folder of the repository if the flag is set
             if include_root_files:
                 for file in os.listdir(repo_root):
