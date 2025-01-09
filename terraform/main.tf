@@ -9,7 +9,6 @@ terraform {
   backend "gcs" {
     bucket  = "langswarm-terraform"
     prefix  = "terraform/state"
-    project = var.project_id
   }
 }
 
