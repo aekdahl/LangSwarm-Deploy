@@ -22,4 +22,6 @@ resource "google_cloud_run_service" "langswarm_frontend" {
     percent         = 100
     latest_revision = true
   }
+
+  depends_on = [google_cloud_run_service.langswarm_backend]
 }
