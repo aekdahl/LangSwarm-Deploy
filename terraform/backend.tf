@@ -7,14 +7,9 @@ resource "google_artifact_registry_repository" "langswarm_repo" {
 
 terraform {
   backend "gcs" {
-    bucket  = var.backend_enabled ? "your-terraform-state-bucket" : null
+    bucket  = "langswarm-terraform"
     prefix  = "terraform/state"
     project = var.project_id
-  }
-  # Local backend fallback for testing
-  backend "local" {
-    enabled = !var.backend_enabled
-    path    = "terraform.tfstate"
   }
 }
 
