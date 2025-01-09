@@ -33,7 +33,7 @@ resource "google_cloud_run_service" "langswarm_backend" {
   template {
     spec {
       containers {
-        image = "europe-west1-docker.pkg.dev/${var.project_id}/langswarm/langswarm-service:latest"
+        image = "europe-west1-docker.pkg.dev/${var.project_id}/langswarm/langswarm-backend:latest"
         ports {
           container_port = 8080
         }
