@@ -3,7 +3,7 @@ resource "google_project_service" "required_apis" {
     "artifactregistry.googleapis.com",
     "run.googleapis.com",
     "storage.googleapis.com",
-    "iamcredentials.googleapis.com",
+    # "iamcredentials.googleapis.com",
     "cloudbuild.googleapis.com",
     "logging.googleapis.com",
     "compute.googleapis.com",
