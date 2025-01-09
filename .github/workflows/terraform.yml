@@ -29,10 +29,7 @@ jobs:
 
     - name: Apply Terraform to Create Artifact Registry
       working-directory: terraform
-      run: terraform apply -target=google_artifact_registry_repository.langswarm_repo \
-           -auto-approve \
-           -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
-           -var="region=europe-west1"
+      run: terraform apply -auto-approve -target=google_artifact_registry_repository.langswarm_repo -var="project_id=${{ secrets.GCP_PROJECT_ID }}" -var="region=europe-west1"
 
     - name: Authenticate Docker with Artifact Registry
       run: |
