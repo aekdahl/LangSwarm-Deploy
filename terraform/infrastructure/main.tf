@@ -13,13 +13,13 @@ resource "google_project_service" "required_apis" {
 }
 
 data "google_artifact_registry_repository" "existing_repo" {
-  name     = "langswarm"
-  location = var.region
-  project  = var.project_id
+  repository_id  = "langswarm"
+  location       = var.region
+  project        = var.project_id
 }
 
 resource "google_artifact_registry_repository" "langswarm_repo" {
-  count    = length(data.google_artifact_registry_repository.existing_repo.name) > 0 ? 0 : 1
+  count         = length(data.google_artifact_registry_repository.existing_repo.name) > 0 ? 0 : 1
   repository_id = "langswarm"
   format        = "DOCKER"
   location      = var.region
