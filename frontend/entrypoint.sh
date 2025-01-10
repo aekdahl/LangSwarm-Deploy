@@ -2,10 +2,6 @@
 
 echo "Starting entrypoint script..."
 
-# Log environment variables
-echo "Environment variables:"
-env
-
 # Check if REACT_APP_BACKEND_URL is set
 if [ -z "$REACT_APP_BACKEND_URL" ]; then
   echo "Warning: REACT_APP_BACKEND_URL is not set. Using default backend URL in config.js."
