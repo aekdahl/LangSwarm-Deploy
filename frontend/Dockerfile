@@ -14,8 +14,17 @@ RUN apt-get update && apt-get install -y curl unzip && \
     rm build.zip && \
     apt-get remove -y curl unzip && apt-get clean
 
+# Copy the entrypoint script into the container
+COPY entrypoint.sh /entrypoint.sh
+
+# Make the entrypoint script executable
+RUN chmod +x /entrypoint.sh
+
 # Expose the default Nginx port
 EXPOSE 80
 
-# Start Nginx
+# Run the entrypoint script before starting Nginx
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Start Nginx as the main container process
 CMD ["nginx", "-g", "daemon off;"]
