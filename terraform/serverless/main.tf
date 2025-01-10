@@ -16,6 +16,12 @@ resource "google_cloud_run_service" "langswarm_backend" {
         ports {
           container_port = 8080
         }
+
+        env {
+          name  = "OPENAI_API_KEY"
+          value = var.openai_api_key
+        }
+
         env {
           name  = "APP_PORT"
           value = "8080"
