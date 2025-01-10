@@ -24,7 +24,7 @@ RUN chmod +x /entrypoint.sh
 EXPOSE 80
 
 # Run the entrypoint script before starting Nginx
-ENTRYPOINT ["/entrypoint.sh"]
+#ENTRYPOINT ["/entrypoint.sh"]
 
 # Start Nginx as the main container process
 CMD ["nginx", "-g", "daemon off;"]
