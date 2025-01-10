@@ -5,8 +5,8 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Install dependencies
-# ToDo: Remove langchain_community when ls-core is updated
-RUN pip install langchain_community langswarm-core langswarm-backend
+# ToDo: Remove langchain_community and openai when ls-core is updated
+RUN pip install openai langchain_community langswarm-core langswarm-backend
 
 # Set environment variables
 ENV APP_PORT=8080
