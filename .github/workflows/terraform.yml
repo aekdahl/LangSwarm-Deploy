@@ -65,4 +65,4 @@ jobs:
       
     - name: Apply Terraform Plan
       working-directory: terraform/serverless
-      run: terraform apply -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}" -var="region=${{ secrets.GCP_REGION }}" -var="openai_api_key=${{ secrets.OPENAI_API_KEY }}"
+      run: terraform apply -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}" -var="region=${{ secrets.GCP_REGION }}" -var="openai_api_key=${{ secrets.OPENAI_API_KEY }}" -var="github_sha=${{ github.sha }}"
