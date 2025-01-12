@@ -7,6 +7,10 @@ ARG RELEASE_URL=https://github.com/aekdahl/LangSwarm-UI/releases/download/v0.0.2
 # Set the working directory
 WORKDIR /usr/share/nginx/html
 
+# Cache fix
+ARG CACHE_BUST=$(date +%s)
+RUN echo "Cache Bust: $CACHE_BUST"
+
 # Download and extract the pre-built frontend artifacts
 RUN apt-get update && apt-get install -y curl unzip && \
     curl -L -o build.zip ${RELEASE_URL} && \
