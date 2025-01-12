@@ -50,14 +50,14 @@ jobs:
 
     - name: Build and Push Backend Docker Image
       run: |
-        docker build -t ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:latest .
-        docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:latest
+        docker build -t ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:${{ github.sha }} .
+        docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:${{ github.sha }}
 
     - name: Build and Push Frontend Docker Image
       run: |
         cd frontend
-        docker build -t ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:latest .
-        docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:latest
+        docker build -t ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:${{ github.sha }} .
+        docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:${{ github.sha }}
 
     - name: Initialize Terraform
       working-directory: terraform/serverless
