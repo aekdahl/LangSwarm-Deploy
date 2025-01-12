@@ -25,7 +25,7 @@ jobs:
 
     - name: Initialize Terraform
       working-directory: terraform/infrastructure
-      run: terraform init -refresh=true
+      run: terraform init
 
     # Untaint the Resource (if needed)
     - name: Untaint iamcredentials.googleapis.com
@@ -61,7 +61,7 @@ jobs:
 
     - name: Initialize Terraform
       working-directory: terraform/serverless
-      run: terraform init -refresh=true
+      run: terraform init
       
     - name: Apply Terraform Plan
       working-directory: terraform/serverless
