@@ -2,7 +2,7 @@
 FROM nginx:stable
 
 # Set an argument for the release URL
-ARG RELEASE_URL=https://github.com/aekdahl/LangSwarm-UI/releases/download/v0.0.31/frontend-build.zip
+ARG RELEASE_URL=https://github.com/aekdahl/LangSwarm-UI/releases/download/v0.0.32/frontend-build.zip
 
 # Set the working directory
 WORKDIR /usr/share/nginx/html
