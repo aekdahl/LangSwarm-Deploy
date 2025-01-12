@@ -12,3 +12,8 @@ variable "openai_api_key" {
   description = "OpenAI API Key"
   type        = string
 }
+
+variable "github_sha" {
+  description = "Github SHA"
+  type        = string
+}
