@@ -50,13 +50,13 @@ jobs:
 
     - name: Build and Push Backend Docker Image
       run: |
-        docker build -t ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:${{ github.sha }} .
+        docker build --no-cache -t ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:${{ github.sha }} .
         docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-backend:${{ github.sha }}
 
     - name: Build and Push Frontend Docker Image
       run: |
         cd frontend
-        docker build -t ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:${{ github.sha }} .
+        docker build --no-cache -t ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:${{ github.sha }} .
         docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/langswarm/langswarm-frontend:${{ github.sha }}
 
     - name: Initialize Terraform
